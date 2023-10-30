@@ -1,0 +1,63 @@
+def encrypt_rail_fence(plain_text, rails):
+    fence = [[] for _ in range(rails)]
+    rail = 0
+    direction = 1
+
+    for char in plain_text:
+        fence[rail].append(char)
+
+        if rail == 0:
+            direction = 1
+        elif rail == rails - 1:
+            direction = -1
+
+        rail += direction
+
+    cipher_text = ''.join([''.join(rail) for rail in fence])
+    return cipher_text
+
+def decrypt_rail_fence(cipher_text, rails):
+    fence = [[] for _ in range(rails)]
+    rail = 0
+    direction = 1
+
+    for char in cipher_text:
+        fence[rail].append(None)
+
+        if rail == 0:
+            direction = 1
+        elif rail == rails - 1:
+            direction = -1
+
+        rail += direction
+
+    index = 0
+    for rail in fence:
+        for i in range(len(rail)):
+            rail[i] = cipher_text[index]
+            index += 1
+
+    rail = 0
+    direction = 1
+    plain_text = ''
+
+    for _ in range(len(cipher_text)):
+        plain_text += fence[rail].pop(0)
+
+        if rail == 0:
+            direction = 1
+        elif rail == rails - 1:
+            direction = -1
+
+        rail += direction
+
+    return plain_text
+
+rails = 3
+message = "HELLO,RAILFENCE"
+
+cipher_text = encrypt_rail_fence(message, rails)
+print("Encrypted:", cipher_text)
+
+decrypted_text = decrypt_rail_fence(cipher_text, rails)
+print("Decrypted:", decrypted_text)
